@@ -1,0 +1,11 @@
+CMEOLAB PROF MOBILE V0.4.1 — SYNCHRO COMPLÈTE
+
+Compatible Principal V1.6.9 protocole V6.
+- absences / retards : format exact attendance
+- notes / contrôles : événement evaluation
+- validation Hizb / Juz : événement quran_validation ; le Principal propose ensuite la génération d’attestation
+- journal local de synchronisation consultable depuis le menu
+- une saisie n’est supprimée de la file locale qu’après acknowledgedIds explicite du Principal
+- affichage reçus / accusés / rejetés / doublons / en attente
+
+Aucune donnée élève n’est incluse dans ce paquet source.

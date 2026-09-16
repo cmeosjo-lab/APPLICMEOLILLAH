@@ -1,7 +1,4 @@
-# CMEOLAB — ÉCOLE GESTION PROF MOBILE
-
-> Base GitHub propre V1. Le nom interne et le protocole restent compatibles avec ÉCOLE GESTION PRO.
-
+# ÉCOLE GESTION PROF MOBILE V0.3
 
 ## Correctif V0.3.1 — défilement mobile
 
