@@ -1,0 +1,54 @@
+# Données locales et personnelles - NE JAMAIS COMMITTER
+PROF_DATA/
+**/PROF_DATA/
+config.json
+prof_data.json
+saisies_a_transmettre.json
+*.db
+*.sqlite
+*.sqlite3
+*.csv
+*.xlsx
+*.xls
+*.rar
+*.7z
+*.bak
+*.backup
+*.log
+*.keystore
+*.jks
+key.properties
+.env
+.env.*
+
+# Flutter / Dart
+.dart_tool/
+.packages
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Binaires générés
+*.apk
+*.aab
+*.ipa
+*.exe
+
+# Données personnelles / exports supplémentaires
+*.pdf
+*.doc
+*.docx
+*.zip
+captures_reelles/
+documents_eleves/
+exports_reels/
+sauvegardes/
+backups/
+secrets/
