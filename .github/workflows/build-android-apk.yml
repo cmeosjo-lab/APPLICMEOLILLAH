@@ -1,0 +1,52 @@
+name: Construire APK Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  android-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le projet
+        uses: actions/checkout@v4
+
+      - name: Installer Flutter stable
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Générer la plateforme Android
+        shell: bash
+        run: |
+          rm -rf android
+          flutter create --platforms=android --org fr.ecolegestion --project-name ecole_gestion_prof_mobile .
+          python3 ci/patch_android.py
+
+      - name: Installer les dépendances
+        run: flutter pub get
+
+      - name: Vérifier le vrai code de l'application
+        run: flutter analyze lib --no-fatal-warnings --no-fatal-infos
+
+      - name: Construire l'APK de test installable
+        run: flutter build apk --debug
+
+      - name: Préparer le fichier APK
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-debug.apk dist/CMEOLAB_PROF_ANDROID_TEST.apk
+
+      - name: Publier l'APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CMEOLAB_PROF_ANDROID_TEST
+          path: dist/CMEOLAB_PROF_ANDROID_TEST.apk
+          if-no-files-found: error
+          retention-days: 30
