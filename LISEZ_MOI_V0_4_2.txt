@@ -1,0 +1,16 @@
+CMEOLAB PROF MOBILE V0.4.2 — CORRECTIF RÉEL
+
+Corrections :
+- le code source réellement envoyé au build contient le format Prof -> Principal attendu ;
+- dates réseau au format JJ/MM/AAAA, identique au Principal ;
+- absences / retards : type=attendance + bloc attendance ;
+- évaluations / notes : type=evaluation + bloc evaluation ;
+- validation Hizb/Juz : type=quran_validation + bloc quranValidation ;
+- journal de synchronisation local ;
+- noms élèves compatibles last/first ;
+- signature Android de TEST rendue stable à partir de cette version pour permettre les futures mises à jour sans désinstallation.
+
+IMPORTANT SIGNATURE :
+La V0.4.1 précédente a été construite avec une clé debug éphémère GitHub. Android ne peut pas la mettre à jour avec une autre signature. Il faudra donc désinstaller UNE DERNIÈRE FOIS l'ancienne appli avant d'installer V0.4.2. À partir de V0.4.2, les futures APK de test utiliseront la même signature stable.
+
+La clé incluse est une clé DEBUG/TEST publique, jamais destinée à une publication Play Store ou production.

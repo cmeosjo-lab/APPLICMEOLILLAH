@@ -5,6 +5,7 @@ import '../services/local_store.dart';
 import '../widgets/action_tile.dart';
 import 'attendance_screen.dart';
 import 'incident_screen.dart';
+import 'evaluation_screen.dart';
 import 'lesson_followup_screen.dart';
 import 'quran_screen.dart';
 import 'student_history_screen.dart';
@@ -46,6 +47,13 @@ class StudentScreen extends StatelessWidget {
               title: 'Absence / retard',
               subtitle: 'Justifié ou non justifié, heure d’arrivée pour les retards',
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AttendanceScreen(config: config, snapshot: snapshot, student: student, store: store))),
+            ),
+            const SizedBox(height: 10),
+            ActionTile(
+              icon: Icons.grade_outlined,
+              title: 'Évaluation / notes',
+              subtitle: 'Coran, Arabe, Aqida, Fiqh, Sira, Tajwid et appréciation',
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => EvaluationScreen(config: config, snapshot: snapshot, student: student, store: store))),
             ),
             const SizedBox(height: 10),
             ActionTile(

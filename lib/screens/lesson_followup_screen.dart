@@ -45,7 +45,7 @@ class _LessonFollowUpScreenState extends State<LessonFollowUpScreen> {
     );
     await widget.store.enqueue(event);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Suivi de leçon enregistré.')));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Suivi de leçon conservé localement. Le Principal V1.6.7 ne prend pas encore ce type en charge.')));
     Navigator.pop(context, true);
   }
 
@@ -71,6 +71,12 @@ class _LessonFollowUpScreenState extends State<LessonFollowUpScreen> {
             ),
             children: [
           Text('Suivi de leçon — ${widget.student.displayName}', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondaryContainer, borderRadius: BorderRadius.circular(12)),
+            child: const Text('V1.6.7 : le suivi de leçon est conservé sur le téléphone mais n’est pas envoyé au Principal tant que le serveur n’accepte pas ce type d’événement.'),
+          ),
           const SizedBox(height: 16),
           if (subjects.isNotEmpty) ...[
             DropdownButtonFormField<String>(

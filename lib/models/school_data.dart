@@ -57,8 +57,8 @@ class Student {
     return Student(
       id: pick(['id', 'studentId', 'ID']),
       matricule: pick(['matricule']),
-      name: pick(['name', 'lastName', 'nom']),
-      firstName: pick(['firstName', 'prenom']),
+      name: pick(['name', 'lastName', 'last', 'nom']),
+      firstName: pick(['firstName', 'first', 'prenom']),
       classId: pick(['classId', 'classeId', 'class']),
       gender: pick(['gender', 'sexe']),
       history: parseHistory(json['history']),
@@ -95,6 +95,7 @@ class SyncSnapshot {
   final String schoolTitle;
   final String schoolYear;
   final String teacher;
+  final double evaluationMax;
   final List<SchoolClass> classes;
   final List<Student> students;
   final List<dynamic> bulletinPeriods;
@@ -109,6 +110,7 @@ class SyncSnapshot {
     required this.schoolTitle,
     required this.schoolYear,
     required this.teacher,
+    required this.evaluationMax,
     required this.classes,
     required this.students,
     required this.bulletinPeriods,
@@ -136,6 +138,7 @@ class SyncSnapshot {
       schoolTitle: pick(['schoolTitle', 'principalTitle', 'appTitle', 'establishmentTitle', 'schoolName']),
       schoolYear: pick(['schoolYear', 'year']),
       teacher: pick(['teacher', 'teacherName']),
+      evaluationMax: double.tryParse((json['evaluationMax'] ?? '20').toString()) ?? 20,
       classes: maps(json['classes']).map(SchoolClass.fromJson).toList(),
       students: maps(json['students']).map(Student.fromJson).toList(),
       bulletinPeriods: json['bulletinPeriods'] is List ? List<dynamic>.from(json['bulletinPeriods']) : const [],

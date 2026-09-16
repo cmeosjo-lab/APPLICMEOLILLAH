@@ -17,8 +17,13 @@ class IncidentScreen extends StatefulWidget {
 
 class _IncidentScreenState extends State<IncidentScreen> {
   String? nature;
-  String priority = 'normal';
+  String priority = 'Normal';
   final message = TextEditingController();
+
+  String _today() {
+    final d = DateTime.now();
+    return '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year.toString().padLeft(4, '0')}';
+  }
 
   List<String> get natures {
     final fromPrincipal = widget.snapshot.references.incidentTypes;
@@ -39,9 +44,9 @@ class _IncidentScreenState extends State<IncidentScreen> {
       classId: widget.student.classId,
       deviceId: deviceId,
       payload: {
-        'kind': 'incident',
-        'subject': 'Incident disciplinaire',
-        'nature': nature,
+        'date': _today(),
+        'category': nature,
+        'subject': 'Incident / ${nature!}',
         'priority': priority,
         'message': message.text.trim(),
       },
@@ -81,11 +86,11 @@ class _IncidentScreenState extends State<IncidentScreen> {
               value: priority,
               decoration: const InputDecoration(labelText: 'Priorité'),
               items: const [
-                DropdownMenuItem(value: 'normal', child: Text('Normale')),
-                DropdownMenuItem(value: 'important', child: Text('Importante')),
-                DropdownMenuItem(value: 'urgent', child: Text('Urgente')),
+                DropdownMenuItem(value: 'Normal', child: Text('Normale')),
+                DropdownMenuItem(value: 'Important', child: Text('Importante')),
+                DropdownMenuItem(value: 'Urgent', child: Text('Urgente')),
               ],
-              onChanged: (v) => setState(() => priority = v ?? 'normal'),
+              onChanged: (v) => setState(() => priority = v ?? 'Normal'),
             ),
             const SizedBox(height: 12),
             TextField(controller: message, maxLines: 5, decoration: const InputDecoration(labelText: 'Description / suite à donner')),

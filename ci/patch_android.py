@@ -2,14 +2,12 @@ from pathlib import Path
 import re
 import xml.etree.ElementTree as ET
 
-# --- AndroidManifest.xml ---
 p = Path('android/app/src/main/AndroidManifest.xml')
 ET.register_namespace('android', 'http://schemas.android.com/apk/res/android')
 ANDROID = '{http://schemas.android.com/apk/res/android}'
 
 tree = ET.parse(p)
 root = tree.getroot()
-
 existing = {e.get(ANDROID + 'name') for e in root.findall('uses-permission')}
 for perm in [
     'android.permission.INTERNET',
@@ -28,31 +26,21 @@ if app is None:
 app.set(ANDROID + 'label', 'École Gestion Prof')
 app.set(ANDROID + 'usesCleartextTraffic', 'true')
 app.set(ANDROID + 'networkSecurityConfig', '@xml/network_security_config')
-
 tree.write(p, encoding='utf-8', xml_declaration=True)
 
 xml = Path('android/app/src/main/res/xml')
 xml.mkdir(parents=True, exist_ok=True)
-network_xml = '''<?xml version="1.0" encoding="utf-8"?>
+(xml / 'network_security_config.xml').write_text('''<?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
   <base-config cleartextTrafficPermitted="true" />
 </network-security-config>
-'''
-(xml / 'network_security_config.xml').write_text(network_xml, encoding='utf-8')
+''', encoding='utf-8')
 
-# --- Android 17 / API 37 ---
-# permission_handler 13.x exige compileSdk 37.
 app_gradle = Path('android/app/build.gradle.kts')
 gradle_text = app_gradle.read_text(encoding='utf-8')
-gradle_text = re.sub(
-    r'compileSdk\s*=\s*flutter\.compileSdkVersion',
-    'compileSdk = 37',
-    gradle_text,
-)
+gradle_text = re.sub(r'compileSdk\s*=\s*flutter\.compileSdkVersion', 'compileSdk = 37', gradle_text)
 app_gradle.write_text(gradle_text, encoding='utf-8')
 
-# Flutter stable génère actuellement AGP 9.1.0.
-# AGP 9.1.1 prend en charge Android API 37.
 settings = Path('android/settings.gradle.kts')
 settings_text = settings.read_text(encoding='utf-8')
 settings_text = re.sub(
