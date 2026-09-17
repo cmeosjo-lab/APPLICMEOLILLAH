@@ -12,6 +12,7 @@ class TeacherEvent {
   final DateTime createdAt;
   final Map<String, dynamic> payload;
   final String status;
+  final String reviewNote;
 
   const TeacherEvent({
     required this.id,
@@ -23,6 +24,7 @@ class TeacherEvent {
     required this.createdAt,
     required this.payload,
     this.status = 'pending',
+    this.reviewNote = '',
   });
 
   factory TeacherEvent.create({
@@ -54,6 +56,7 @@ class TeacherEvent {
         createdAt: DateTime.tryParse((json['createdAt'] ?? '').toString()) ?? DateTime.now(),
         payload: json['payload'] is Map ? Map<String, dynamic>.from(json['payload']) : <String, dynamic>{},
         status: (json['_mobileStatus'] ?? 'pending').toString(),
+        reviewNote: (json['_reviewNote'] ?? '').toString(),
       );
 
   /// Types effectivement compris par le serveur Principal V1.6.7.
@@ -63,6 +66,8 @@ class TeacherEvent {
         'communication',
         'quranValidation',
         'quran_validation',
+        'quranProgress',
+        'quran_progress',
         'homework',
         'annualAppreciation',
         'annual_appreciation',
@@ -71,6 +76,7 @@ class TeacherEvent {
   String get protocolType {
     if (type == 'quranValidation') return 'quran_validation';
     if (type == 'annualAppreciation') return 'annual_appreciation';
+    if (type == 'quranProgress') return 'quran_progress';
     return type;
   }
 
@@ -106,6 +112,9 @@ class TeacherEvent {
       case 'quran_validation':
         result['quranValidation'] = payload;
         break;
+      case 'quran_progress':
+        result['quranProgress'] = payload;
+        break;
       case 'homework':
         result['homework'] = payload;
         break;
@@ -130,9 +139,10 @@ class TeacherEvent {
         'createdAt': createdAt.toIso8601String(),
         'payload': payload,
         '_mobileStatus': status,
+        if (reviewNote.isNotEmpty) '_reviewNote': reviewNote,
       };
 
-  TeacherEvent copyWithStatus(String newStatus) => TeacherEvent(
+  TeacherEvent copyWithStatus(String newStatus, {String? note}) => TeacherEvent(
         id: id,
         type: type,
         teacher: teacher,
@@ -142,5 +152,6 @@ class TeacherEvent {
         createdAt: createdAt,
         payload: payload,
         status: newStatus,
+        reviewNote: note ?? reviewNote,
       );
 }

@@ -1,0 +1,16 @@
+GESTCOURS PROF MOBILE V0.6.0
+============================
+
+Ajouts :
+- reconnexion automatique et statut réseau moins sensible aux microcoupures ;
+- trois essais avant de considérer le Principal indisponible ;
+- file d'attente consultable et annulation avant accusé de réception ;
+- statuts Reçue / Validée / Refusée lorsque le Principal les publie ;
+- nom lisible de l'appareil + identifiant technique conservé en arrière-plan ;
+- nouvel appareil soumis à autorisation du Principal ;
+- devoirs classe ou élève, plusieurs matières, livre, leçon/exercices ;
+- signalements structurés : discipline, matériel, devoirs ;
+- discipline : bavardage, grossièreté, téléphone, bagarre, insolence, harcèlement ;
+- saisies conservées hors connexion jusqu'à accusé explicite du Principal.
+
+Aucune donnée réelle d'élève ne doit être ajoutée au dépôt GitHub.

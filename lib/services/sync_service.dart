@@ -43,12 +43,44 @@ class SyncService {
     return value.map((e) => e.toString().trim()).where((e) => e.isNotEmpty).toList();
   }
 
+  Future<void> _refreshSentStatuses(
+    PrincipalConfig config,
+    String deviceId,
+    String deviceName,
+  ) async {
+    final history = await store.loadSentHistory();
+    if (history.isEmpty) return;
+    final ids = history.reversed.take(120).map((e) => e.id).toList();
+    final statuses = await api.eventStatuses(
+      config,
+      ids,
+      deviceId: deviceId,
+      deviceName: deviceName,
+    );
+    if (statuses.isEmpty) return;
+    final updated = history.map((e) {
+      final s = statuses[e.id];
+      if (s == null) return e;
+      final raw = (s['status'] ?? '').trim();
+      final status = switch (raw) {
+        'accepted' => 'validated',
+        'refused' => 'refused',
+        'pending' || '' => 'received',
+        _ => raw,
+      };
+      return e.copyWithStatus(status, note: s['reviewNote'] ?? '');
+    }).toList();
+    await store.saveSentHistory(updated);
+  }
+
   Future<SyncResult> synchronize(PrincipalConfig config) async {
+    final deviceId = await store.getOrCreateDeviceId();
+    final deviceName = await store.getOrCreateDeviceName();
     final online = await api.ping(config);
     final queue = await store.loadQueue();
     await store.appendSyncLog('Début synchronisation — file locale: ${queue.length} saisie(s).');
     if (!online) {
-      await store.appendSyncLog('ÉCHEC — PC Principal indisponible. ${queue.length} saisie(s) conservée(s).');
+      await store.appendSyncLog('PC Principal momentanément inaccessible — ${queue.length} saisie(s) conservée(s).');
       return SyncResult(
         connected: false,
         sent: 0,
@@ -59,7 +91,7 @@ class SyncService {
         remaining: queue.length,
         errors: const [],
         snapshot: await store.loadSnapshot(),
-        message: 'Principal indisponible. ${queue.length} saisie(s) conservée(s) sur le téléphone.',
+        message: 'Principal momentanément inaccessible. Nouvelle tentative automatique prévue. ${queue.length} saisie(s) conservée(s).',
       );
     }
 
@@ -74,7 +106,12 @@ class SyncService {
     final unsupported = pending.length - sendable.length;
 
     if (sendable.isNotEmpty) {
-      final response = await api.sendEvents(config, sendable);
+      final response = await api.sendEvents(
+        config,
+        sendable,
+        deviceId: deviceId,
+        deviceName: deviceName,
+      );
       received = _asInt(response['received']);
       rejected = _asInt(response['rejected']);
       duplicates = _asInt(response['duplicates']);
@@ -85,29 +122,38 @@ class SyncService {
           ...(response['acknowledgedIds'] as List).map((e) => e.toString()),
       };
 
-      // Sécurité V0.4 : on ne retire JAMAIS une saisie sur la seule base du
-      // compteur `received`. Seuls les IDs explicitement accusés sont retirés.
       if (acknowledged.isNotEmpty) {
-        final before = pending.length;
+        final moved = pending.where((e) => acknowledged.contains(e.id)).toList();
         pending.removeWhere((e) => acknowledged.contains(e.id));
-        sent = before - pending.length;
+        sent = moved.length;
+        final history = await store.loadSentHistory();
+        final already = history.map((e) => e.id).toSet();
+        for (final e in moved) {
+          if (!already.contains(e.id)) history.add(e.copyWithStatus('received'));
+        }
+        await store.saveSentHistory(history);
       }
       await store.saveQueue(pending);
-      await store.appendSyncLog('Envoi événements — reçus: $received, accusés: $sent, rejetés: $rejected, doublons: $duplicates, non compatibles: $unsupported, restant: ${pending.length}${errors.isEmpty ? '' : ' — ${errors.take(5).join(' | ')}'}');
+      await store.appendSyncLog('Envoi — reçus: $received, accusés: $sent, rejetés: $rejected, doublons: $duplicates, non compatibles: $unsupported, restant: ${pending.length}${errors.isEmpty ? '' : ' — ${errors.take(5).join(' | ')}'}');
     } else if (unsupported > 0) {
       await store.appendSyncLog('Aucune saisie compatible à envoyer — $unsupported saisie(s) locale(s) non compatible(s).');
     }
 
-    final snapshot = await api.sync(config);
+    final snapshot = await api.sync(
+      config,
+      deviceId: deviceId,
+      deviceName: deviceName,
+    );
     await store.saveSnapshot(snapshot);
+    await _refreshSentStatuses(config, deviceId, deviceName);
     await store.appendSyncLog('Référentiel/classes reçus — ${snapshot.classes.length} classe(s), ${snapshot.students.length} élève(s).');
 
     final parts = <String>[
       'Principal connecté.',
-      if (sendable.isNotEmpty) '$received reçu(s), $sent accusé(s) par le serveur',
+      if (sendable.isNotEmpty) '$received reçu(s), $sent accusé(s)',
       if (rejected > 0) '$rejected rejeté(s)',
       if (duplicates > 0) '$duplicates doublon(s)',
-      if (unsupported > 0) '$unsupported saisie(s) locale(s) non compatible(s) V1.6.7',
+      if (unsupported > 0) '$unsupported saisie(s) non compatible(s)',
       '${pending.length} en attente.',
     ];
     if (errors.isNotEmpty) parts.add('Erreur Principal : ${errors.take(3).join(' | ')}');

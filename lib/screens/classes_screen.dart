@@ -95,7 +95,7 @@ class ClassStudentsScreen extends StatelessWidget {
                         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ClassEvaluationScreen(config: config, snapshot: snapshot, schoolClass: schoolClass, students: students, store: store))),
                         icon: const Icon(Icons.grading_outlined), label: const Text('Contrôle / notes')),
                       OutlinedButton.icon(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => HomeworkScreen(config: config, schoolClass: schoolClass, store: store))),
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => HomeworkScreen(config: config, schoolClass: schoolClass, students: students, store: store))),
                         icon: const Icon(Icons.assignment_outlined), label: const Text('Devoir')),
                     ],
                   ),
@@ -113,7 +113,7 @@ class ClassStudentsScreen extends StatelessWidget {
                   return ListTile(
                     leading: CircleAvatar(child: Text('${i + 1}')),
                     title: Text(display, style: const TextStyle(fontWeight: FontWeight.w700)),
-                    subtitle: s.matricule.trim().isEmpty ? null : Text('Matricule : ${s.matricule}'),
+                    subtitle: null,
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => Navigator.push(
                       context,

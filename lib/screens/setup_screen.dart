@@ -26,8 +26,18 @@ class _SetupScreenState extends State<SetupScreen> {
   final port = TextEditingController(text: '8080');
   final teacher = TextEditingController();
   final code = TextEditingController();
+  final deviceName = TextEditingController();
   bool busy = false;
   String? error;
+
+
+  @override
+  void initState() {
+    super.initState();
+    widget.store.getOrCreateDeviceName().then((v) {
+      if (mounted && deviceName.text.trim().isEmpty) setState(() => deviceName.text = v);
+    });
+  }
 
   PrincipalConfig get config => PrincipalConfig(
         host: host.text.trim(),
@@ -66,7 +76,11 @@ class _SetupScreenState extends State<SetupScreen> {
       return;
     }
     try {
-      final snapshot = await widget.api.sync(c);
+      final deviceId = await widget.store.getOrCreateDeviceId();
+      final chosenName = deviceName.text.trim();
+      if (chosenName.isNotEmpty) await widget.store.setDeviceName(chosenName);
+      final savedName = await widget.store.getOrCreateDeviceName();
+      final snapshot = await widget.api.sync(c, deviceId: deviceId, deviceName: savedName);
       await widget.store.saveConfig(c);
       await widget.store.saveSnapshot(snapshot);
       widget.onConnected(c);
@@ -189,6 +203,16 @@ class _SetupScreenState extends State<SetupScreen> {
                           decoration: const InputDecoration(
                             labelText: 'Code généré par le Principal',
                             prefixIcon: Icon(Icons.key_outlined),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: deviceName,
+                          textCapitalization: TextCapitalization.words,
+                          decoration: const InputDecoration(
+                            labelText: 'Nom de ce téléphone',
+                            helperText: 'Détecté automatiquement ; vous pouvez le renommer.',
+                            prefixIcon: Icon(Icons.phone_android_outlined),
                           ),
                         ),
                         if (error != null) ...[
