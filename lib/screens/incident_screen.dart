@@ -28,7 +28,7 @@ class _IncidentScreenState extends State<IncidentScreen> {
     'Grossièreté': ['Paroles déplacées', 'Insulte envers un élève', 'Insulte envers un adulte'],
     'Téléphone': ['Utilisation en cours', 'Sonnerie / notification', 'Refus de ranger le téléphone'],
     'Bagarre': ['Dispute physique', 'Coups', 'Provocation / altercation'],
-    'Insolence': ['Réponse irrespectueuse', 'Refus d'obéir', 'Attitude provocatrice'],
+    'Insolence': ['Réponse irrespectueuse', "Refus d'obéir", 'Attitude provocatrice'],
     'Harcèlement': ['Verbal', 'Physique', 'Numérique / réseaux'],
     'Non apporté': ['Cahier', 'Livre', 'Mushaf', 'Matériel demandé'],
     'En mauvais état': ['Cahier', 'Livre', 'Mushaf', 'Matériel demandé'],
