@@ -1,0 +1,9 @@
+GESTCOURS MOBILE — ÉVOLUTION
+
+- Reconnexion automatique renforcée et tolérance aux microcoupures.
+- Historique élève consultable avec filtres.
+- Discipline détaillée (nature + sous-motif + remarque automatique).
+- Case Coran pour devoir collectif de classe.
+- Nouveau visuel : plume gravée sur pierre.
+- Aucun numéro de version affiché dans l’interface.
+- Aucune donnée personnelle réelle intégrée dans les sources ou exemples.

@@ -57,7 +57,7 @@ class PrincipalApi {
     try {
       final r = await http.get(
         _uri(c, '/api/v1/reference-data', _authQuery(c, deviceId: deviceId, deviceName: deviceName)),
-        headers: {'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.0'},
+        headers: {'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.1'},
       ).timeout(timeout);
       if (r.statusCode < 200 || r.statusCode >= 300 || r.bodyBytes.isEmpty) return null;
       final decoded = jsonDecode(utf8.decode(r.bodyBytes));
@@ -74,7 +74,7 @@ class PrincipalApi {
   }) async {
     final r = await http.get(
       _uri(c, '/api/v1/sync', _authQuery(c, deviceId: deviceId, deviceName: deviceName)),
-      headers: {'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.0'},
+      headers: {'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.1'},
     ).timeout(timeout);
 
     if (r.statusCode < 200 || r.statusCode >= 300) {
@@ -110,7 +110,7 @@ class PrincipalApi {
     };
     final r = await http.post(
       _uri(c, '/api/v1/events', _authQuery(c, deviceId: deviceId, deviceName: deviceName)),
-      headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.0'},
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.1'},
       body: jsonEncode(body),
     ).timeout(timeout);
     if (r.statusCode < 200 || r.statusCode >= 300) {
@@ -137,7 +137,7 @@ class PrincipalApi {
       q['ids'] = ids.take(120).join(',');
       final r = await http.get(
         _uri(c, '/api/v1/event-status', q),
-        headers: {'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.0'},
+        headers: {'Accept': 'application/json', 'User-Agent': 'GESTCOURS-Prof-Mobile/0.6.1'},
       ).timeout(timeout);
       if (r.statusCode < 200 || r.statusCode >= 300 || r.bodyBytes.isEmpty) return {};
       final decoded = jsonDecode(utf8.decode(r.bodyBytes));

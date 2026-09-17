@@ -34,7 +34,7 @@ class _EcoleGestionProfAppState extends State<EcoleGestionProfApp> {
   @override
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'École Gestion Prof',
+        title: 'GESTCOURS',
         theme: AppTheme.light(),
         home: !loaded
             ? const Scaffold(body: Center(child: CircularProgressIndicator()))

@@ -20,6 +20,7 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
   String audience = 'Classe';
   String? studentId;
   final Set<String> subjects = {'Arabe'};
+  bool quranCollective = false;
   final book = TextEditingController();
   final lessonNumbers = TextEditingController();
   final exerciseNumbers = TextEditingController();
@@ -83,6 +84,24 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
           child: InputDecorator(decoration: const InputDecoration(labelText: 'Date'), child: Text(_date(date))),
         ),
         const SizedBox(height: 12),
+        CheckboxListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Coran', style: TextStyle(fontWeight: FontWeight.w800)),
+          subtitle: const Text('Devoir collectif de Coran pour toute la classe'),
+          value: quranCollective,
+          onChanged: (v) => setState(() {
+            quranCollective = v ?? false;
+            if (quranCollective) {
+              audience = 'Classe';
+              studentId = null;
+              subjects.add('Coran');
+            } else {
+              subjects.remove('Coran');
+              if (subjects.isEmpty) subjects.add('Arabe');
+            }
+          }),
+        ),
+        const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: audience,
           decoration: const InputDecoration(labelText: 'Destinataire'),
@@ -90,6 +109,7 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
           onChanged: (v) => setState(() {
             audience = v ?? 'Classe';
             if (audience == 'Classe') studentId = null;
+            if (audience == 'Élève') quranCollective = false;
           }),
         ),
         if (audience == 'Élève') ...[

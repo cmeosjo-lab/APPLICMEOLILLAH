@@ -40,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     load();
-    retryTimer = Timer.periodic(const Duration(seconds: 45), (_) {
+    retryTimer = Timer.periodic(const Duration(seconds: 15), (_) {
       if (!mounted || syncing) return;
-      if (!connected || pending > 0) sync(silent: true);
+      if (!connected || pending > 0 || consecutiveFailures > 0) sync(silent: true);
     });
   }
 
@@ -74,8 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         snapshot = result.snapshot;
         pending = result.remaining;
-        connected = result.connected;
-        status = result.message;
+        if (result.connected) {
+          connected = true;
+        } else if (consecutiveFailures >= 2) {
+          connected = false;
+        }
+        status = result.connected ? result.message :
+            (consecutiveFailures < 2 ? 'Connexion instable — nouvelle tentative automatique…' : result.message);
         lastReceived = result.received;
         lastConfirmed = result.sent;
         lastRejected = result.rejected;
@@ -90,9 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (e) {
       if (mounted) setState(() {
-        connected = false;
         consecutiveFailures++;
-        status = e.toString();
+        if (consecutiveFailures >= 3) connected = false;
+        status = consecutiveFailures < 3
+            ? 'Connexion instable — les données restent conservées et une nouvelle tentative est automatique.'
+            : e.toString();
       });
     } finally {
       if (mounted) setState(() => syncing = false);

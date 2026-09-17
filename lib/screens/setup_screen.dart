@@ -119,7 +119,7 @@ class _SetupScreenState extends State<SetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(title: const Text('ÉCOLE GESTION PROF')),
+      appBar: AppBar(title: const Text('GESTCOURS')),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -148,14 +148,13 @@ class _SetupScreenState extends State<SetupScreen> {
                           ),
                           child: Column(
                             children: [
-                              Icon(
-                                Icons.school_outlined,
-                                size: 44,
-                                color: Theme.of(context).colorScheme.primary,
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(18),
+                                child: Image.asset('assets/plume_gravure.png', width: 92, height: 92, fit: BoxFit.cover),
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                'Connexion au PC Principal',
+                                'Connexion au Principal',
                                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                       fontWeight: FontWeight.w800,
                                     ),

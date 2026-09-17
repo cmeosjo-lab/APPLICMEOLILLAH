@@ -19,8 +19,24 @@ class _IncidentScreenState extends State<IncidentScreen> {
   DateTime date = DateTime.now();
   String family = 'Discipline';
   String? nature;
+  String? detail;
   String priority = 'Normal';
   final message = TextEditingController();
+
+  static const Map<String, List<String>> detailsByNature = {
+    'Bavardage': ['Répété malgré rappel', 'Perturbe le cours', 'Discussion ponctuelle'],
+    'Grossièreté': ['Paroles déplacées', 'Insulte envers un élève', 'Insulte envers un adulte'],
+    'Téléphone': ['Utilisation en cours', 'Sonnerie / notification', 'Refus de ranger le téléphone'],
+    'Bagarre': ['Dispute physique', 'Coups', 'Provocation / altercation'],
+    'Insolence': ['Réponse irrespectueuse', 'Refus d'obéir', 'Attitude provocatrice'],
+    'Harcèlement': ['Verbal', 'Physique', 'Numérique / réseaux'],
+    'Non apporté': ['Cahier', 'Livre', 'Mushaf', 'Matériel demandé'],
+    'En mauvais état': ['Cahier', 'Livre', 'Mushaf', 'Matériel demandé'],
+    'Fait partiellement': ['Travail incomplet', 'Exercices partiels', 'Leçon partiellement préparée'],
+    'Non fait': ['Aucun travail rendu', 'Leçon non préparée', 'Exercices non faits'],
+  };
+
+  List<String> get details => List<String>.from(detailsByNature[nature] ?? const <String>[]);
 
   static const Map<String, List<String>> builtIn = {
     'Discipline': [
@@ -63,14 +79,15 @@ class _IncidentScreenState extends State<IncidentScreen> {
 
   String get generatedRemark {
     final n = nature?.trim() ?? '';
+    final d = detail?.trim() ?? '';
     if (n.isEmpty) return '';
     switch (family) {
       case 'Discipline':
-        return 'Signalement de discipline : $n.';
+        return 'Signalement de discipline : $n${d.isEmpty ? '' : ' — $d'}.';
       case 'Matériel':
-        return 'Signalement matériel : $n.';
+        return 'Signalement matériel : $n${d.isEmpty ? '' : ' — $d'}.';
       case 'Devoirs':
-        return 'Suivi des devoirs : $n.';
+        return 'Suivi des devoirs : $n${d.isEmpty ? '' : ' — $d'}.';
       default:
         return n;
     }
@@ -95,6 +112,7 @@ class _IncidentScreenState extends State<IncidentScreen> {
         'category': structuredCategory,
         'subject': 'Signalement : $structuredCategory',
         'priority': priority,
+        if ((detail ?? '').trim().isNotEmpty) 'detail': detail!.trim(),
         'message': text.trim(),
       },
     );
@@ -131,6 +149,7 @@ class _IncidentScreenState extends State<IncidentScreen> {
                 onChanged: (v) => setState(() {
                   family = v ?? 'Discipline';
                   nature = null;
+                  detail = null;
                 }),
               ),
               const SizedBox(height: 12),
@@ -139,8 +158,18 @@ class _IncidentScreenState extends State<IncidentScreen> {
                 isExpanded: true,
                 decoration: const InputDecoration(labelText: 'Nature du signalement'),
                 items: natures.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                onChanged: (v) => setState(() => nature = v),
+                onChanged: (v) => setState(() { nature = v; detail = null; }),
               ),
+              if (details.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  value: detail,
+                  isExpanded: true,
+                  decoration: const InputDecoration(labelText: 'Détail / nature précise'),
+                  items: details.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                  onChanged: (v) => setState(() => detail = v),
+                ),
+              ],
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 value: priority,
