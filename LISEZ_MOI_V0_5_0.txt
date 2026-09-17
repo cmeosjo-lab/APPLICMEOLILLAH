@@ -1,0 +1,19 @@
+CMEOLAB PROF MOBILE V0.5.0 — DOUZE AMELIORATIONS
+
+Ajouts principaux :
+1. Centre de synchronisation avec reçus/accusés/rejetés/doublons et journal.
+2. Appel de classe rapide : présents par défaut, absences/retards seulement à modifier.
+3. Compatible avec les nouvelles alertes du tableau de bord Principal.
+4. Contrôles/notes par classe avec absent/dispensé/non noté.
+5. Suivi Coran + validation Hizb/Juz conservés.
+6. Historique élève synchronisé depuis le Principal.
+7. Identifiant unique de chaque événement et accusé explicite avant suppression locale.
+8. Sauvegarde/restauration locale par export JSON privé.
+9. Identifiant d'appareil conservé et transmis au Principal.
+10. Devoirs de classe transmis au Principal pour validation avant intégration.
+11. Actions de classe regroupées : Appel, Contrôle/notes, Devoir.
+12. Travail hors connexion visible avec file locale persistante.
+
+IMPORTANT :
+- les absences et retards envoyés par le mobile ne sont PAS intégrés directement : ils attendent la validation du Principal, comme les devoirs.
+- aucune donnée élève réelle n'est incluse dans ce paquet source.

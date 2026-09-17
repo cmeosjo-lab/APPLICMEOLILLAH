@@ -91,4 +91,33 @@ class LocalStore {
     await p.remove(_syncLogKey);
   }
 
+  Future<String> exportBundle() async {
+    final p = await _prefs;
+    return jsonEncode({
+      'version': 1,
+      'config': p.getString(_configKey),
+      'snapshot': p.getString(_snapshotKey),
+      'queue': p.getString(_queueKey),
+      'deviceId': p.getString(_deviceKey),
+      'syncLog': p.getStringList(_syncLogKey) ?? <String>[],
+    });
+  }
+
+  Future<void> importBundle(String raw) async {
+    final data = jsonDecode(raw);
+    if (data is! Map) throw const FormatException('Sauvegarde invalide');
+    final p = await _prefs;
+    Future<void> putString(String key, dynamic value) async {
+      final v = value?.toString() ?? '';
+      if (v.isEmpty || v == 'null') { await p.remove(key); } else { await p.setString(key, v); }
+    }
+    await putString(_configKey, data['config']);
+    await putString(_snapshotKey, data['snapshot']);
+    await putString(_queueKey, data['queue']);
+    await putString(_deviceKey, data['deviceId']);
+    if (data['syncLog'] is List) {
+      await p.setStringList(_syncLogKey, (data['syncLog'] as List).map((e) => e.toString()).toList());
+    }
+  }
+
 }

@@ -1,0 +1,7 @@
+OUTIL DE CONTROLE EN LECTURE SEULE
+==================================
+Ce programme ne transmet aucun événement et ne modifie pas le Principal.
+Il appelle seulement /api/v1/ping et /api/v1/sync afin de contrôler la forme exacte du protocole V6.
+
+Exemple dans Invite de commandes :
+principal_probe_windows_x64.exe 192.168.1.10 8080 PROF_TEST 123456

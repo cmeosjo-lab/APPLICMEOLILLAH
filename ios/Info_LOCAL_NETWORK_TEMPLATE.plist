@@ -1,0 +1,9 @@
+<key>NSLocalNetworkUsageDescription</key>
+<string>Connexion au PC Principal de l’établissement sur le réseau local afin de synchroniser les classes et les saisies du professeur.</string>
+<key>NSCameraUsageDescription</key>
+<string>La caméra sert uniquement à scanner le QR code facultatif de connexion au PC Principal.</string>
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsLocalNetworking</key>
+    <true/>
+</dict>

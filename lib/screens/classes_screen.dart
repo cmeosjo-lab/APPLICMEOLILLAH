@@ -3,6 +3,9 @@ import '../models/principal_config.dart';
 import '../models/school_data.dart';
 import '../services/local_store.dart';
 import 'student_screen.dart';
+import 'roll_call_screen.dart';
+import 'homework_screen.dart';
+import 'class_evaluation_screen.dart';
 
 class ClassesScreen extends StatelessWidget {
   final PrincipalConfig config;
@@ -79,7 +82,26 @@ class ClassStudentsScreen extends StatelessWidget {
       body: SafeArea(
         child: students.isEmpty
             ? const Center(child: Padding(padding: EdgeInsets.all(24), child: Text('Aucun élève reçu pour cette classe.')))
-            : ListView.separated(
+            : Column(children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                  child: Wrap(
+                    spacing: 8, runSpacing: 8,
+                    children: [
+                      FilledButton.icon(
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => RollCallScreen(config: config, snapshot: snapshot, schoolClass: schoolClass, students: students, store: store))),
+                        icon: const Icon(Icons.fact_check_outlined), label: const Text('Appel de classe')),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ClassEvaluationScreen(config: config, snapshot: snapshot, schoolClass: schoolClass, students: students, store: store))),
+                        icon: const Icon(Icons.grading_outlined), label: const Text('Contrôle / notes')),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => HomeworkScreen(config: config, schoolClass: schoolClass, store: store))),
+                        icon: const Icon(Icons.assignment_outlined), label: const Text('Devoir')),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Expanded(child: ListView.separated(
                 padding: EdgeInsets.fromLTRB(12, 12, 12, 48 + MediaQuery.of(context).padding.bottom),
                 itemCount: students.length,
                 separatorBuilder: (_, __) => const Divider(height: 1),
@@ -101,7 +123,8 @@ class ClassStudentsScreen extends StatelessWidget {
                     ),
                   );
                 },
-              ),
+              )),
+            ]),
       ),
     );
   }
